@@ -4,6 +4,8 @@ from langchain_core.messages import HumanMessage
 from dotenv import load_dotenv
 load_dotenv()
 
+llm = ChatOpenAI(model="gpt-4o-mini")
+
 def orchestrate(state: State) -> dict:
     goal = state['goal']
     prompt = f"""You are an orchestrator agent. Your only job is to break down the goal provided below into 3-5 clear, actionable subtasks.
@@ -11,7 +13,6 @@ def orchestrate(state: State) -> dict:
     <goal>
     {goal}
     </goal>"""
-    llm = ChatOpenAI(model="gpt-4o-mini")
     response = llm.invoke([HumanMessage(content=prompt)])
     # response.content is the raw string
     print("LLM Response:", response.content)
