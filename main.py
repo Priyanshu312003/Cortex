@@ -6,7 +6,8 @@ if __name__ == "__main__":
         "goal": "plan a trip to Paris",
         "tasks": [],
         "research": "",
-        "output": ""
+        "output": "",
+        "revision_count": 0
     }
     final_state = graph.invoke(initial_state)
     print("Final Output:", final_state['output'])

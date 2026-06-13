@@ -5,6 +5,7 @@ from agents.orchestrator import orchestrate
 from agents.researcher import researcher
 from agents.writer import writer
 from agents.critic import critic 
+from agents.router import route_after_critic
 
 def build_graph():
     graph = StateGraph(State)
@@ -23,7 +24,14 @@ def build_graph():
     graph.add_edge("orchestrate", "researcher")
     graph.add_edge("researcher", "writer")
     graph.add_edge("writer", "critic")
-    graph.add_edge("critic", "memory_write")
+    graph.add_conditional_edges(
+        "critic",
+        route_after_critic,
+        {
+            "researcher": "researcher",
+            "memory_write": "memory_write"
+        }
+    )
     graph.add_edge("memory_write", END)
     
     return graph.compile()

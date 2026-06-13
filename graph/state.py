@@ -8,3 +8,4 @@ class State(TypedDict):
     output: str
     critic_score: int
     critic_feedback: str
+    revision_count: int
