@@ -31,7 +31,6 @@ def save_to_memory(goal: str, output: str) -> None:
             payload={"goal": goal, "output": output}
         )]
     )
-    print("Saved to memory:", goal)
 
 def search_memory(goal: str) -> str:
     # 1. converting goal to embedding
