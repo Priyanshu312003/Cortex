@@ -31,6 +31,7 @@ def save_to_memory(goal: str, output: str) -> None:
             payload={"goal": goal, "output": output}
         )]
     )
+    print("Saved to memory:", goal)
 
 def search_memory(goal: str) -> str:
     # 1. converting goal to embedding
@@ -38,12 +39,14 @@ def search_memory(goal: str) -> str:
     
     # 2. searching qdrant for similar past runs
     try:
-        results = client.search(
+        results = client.query_points(
         collection_name=COLLECTION_NAME,
-        query_vector=vector,
+        query=vector,
         limit=1
-        )
+        ).points
         if results:
             return results[0].payload["output"]
-    except Exception:
+        return ""
+    except Exception as e:
+        print("Memory search error:", e)
         return ""
