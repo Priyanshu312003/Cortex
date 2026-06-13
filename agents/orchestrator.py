@@ -10,6 +10,8 @@ def orchestrate(state: State) -> dict:
     goal = state['goal']
     past_context = state["past_context"]
     prompt = f"""You are an orchestrator agent. Your only job is to break down the goal provided below into 3-5 clear, actionable subtasks.
+    Each subtask MUST be a self-contained, searchable query: it must explicitly name the specific subject of the goal, because whoever reads each subtask will NOT have seen the original goal.
+    A subtask like "find budget accommodation" is BAD (no subject); "find budget accommodation in Paris" is GOOD. Never rely on the goal for context that isn't repeated inside the subtask itself.
     You should consider any relevant past context from previous runs to inform your task breakdown.
     If past_context is empty, ignore it.
     <past_context>
