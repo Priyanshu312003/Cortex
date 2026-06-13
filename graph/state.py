@@ -6,3 +6,5 @@ class State(TypedDict):
     tasks: List[str]
     research: str
     output: str
+    critic_score: int
+    critic_feedback: str
