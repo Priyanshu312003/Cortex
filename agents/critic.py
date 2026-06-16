@@ -1,11 +1,12 @@
 import json
 from openai import OpenAI
 from graph.state import State
+from langsmith import traceable
 
 client = OpenAI()
 
 
-
+@traceable(run_type="llm", name="critic")
 def critic(state: State) -> dict:
     goal = state["goal"]
     research = state["research"]
