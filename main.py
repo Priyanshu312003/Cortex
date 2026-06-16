@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv(override=True)
 from graph.cortex_graph import build_graph
 
 if __name__ == "__main__":
