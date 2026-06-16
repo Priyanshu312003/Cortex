@@ -5,3 +5,4 @@ openai==2.41.0
 qdrant-client==1.18.0
 tavily-python==0.7.25
 python-dotenv==1.2.2
+langsmith==0.8.11
