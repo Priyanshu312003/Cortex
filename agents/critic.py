@@ -43,8 +43,10 @@ def critic(state: State) -> dict:
         result = json.loads(content)
 
     # 4. return critic_score and critic_feedback
-        score = result.get("score", 10)
+        score = result.get("score")
         feedback = result.get("feedback", "No major issues.")
+        if not isinstance(score, int) or not (1 <= score <= 10):
+            raise ValueError(f"Critic returned invalid score: {score!r}")
         revision_count = state.get("revision_count", 0) + 1
         log_score(goal, score, revision_count)
         return {"critic_score": score, "critic_feedback": feedback, "revision_count": revision_count}
@@ -53,5 +55,5 @@ def critic(state: State) -> dict:
     except Exception as e:
         print("Critic error:", e)
         revision_count = state.get("revision_count", 0) + 1
-        log_score(goal, 10, revision_count)
-        return {"critic_score": 10, "critic_feedback": "No major issues.", "revision_count": revision_count}
+        log_score(goal, 1, revision_count)
+        return {"critic_score": 1, "critic_feedback": "Critic failed to evaluate.", "revision_count": revision_count}
