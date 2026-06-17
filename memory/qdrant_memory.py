@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 client = QdrantClient(url=os.getenv("QDRANT_URL"), api_key=os.getenv("QDRANT_API_KEY"))
-embeddings = OpenAIEmbeddings()
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 COLLECTION_NAME = "cortex_memory"
 
 def save_to_memory(goal: str, output: str) -> None:
