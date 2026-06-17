@@ -2,6 +2,7 @@ import json
 from openai import OpenAI
 from graph.state import State
 from langsmith import traceable
+from utils.scoring import log_score
 
 client = OpenAI()
 
@@ -42,9 +43,15 @@ def critic(state: State) -> dict:
         result = json.loads(content)
 
     # 4. return critic_score and critic_feedback
-        return {"critic_score": result.get("score", 10), "critic_feedback": result.get("feedback", "No major issues."), "revision_count": state.get("revision_count",0)+1}
+        score = result.get("score", 10)
+        feedback = result.get("feedback", "No major issues.")
+        revision_count = state.get("revision_count", 0) + 1
+        log_score(goal, score, revision_count)
+        return {"critic_score": score, "critic_feedback": feedback, "revision_count": revision_count}
 
     # 5. on failure, return a safe default
     except Exception as e:
         print("Critic error:", e)
-        return {"critic_score": 10, "critic_feedback": "No major issues.", "revision_count": state.get("revision_count",0)+1}
+        revision_count = state.get("revision_count", 0) + 1
+        log_score(goal, 10, revision_count)
+        return {"critic_score": 10, "critic_feedback": "No major issues.", "revision_count": revision_count}
