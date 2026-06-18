@@ -144,12 +144,64 @@ function StepRow({ step, isLast, isRunning }) {
   )
 }
 
-export default function PipelineSidebar({ events, status }) {
-  const steps = buildStepList(events)
-  const isRunning = status === 'running'
+// Compact critique result, docked under the pipeline. Full feedback still
+// lives in the Final Report header; here we show score + a short version.
+function CritiqueDock({ critic }) {
+  const reduce = useReducedMotion()
+  const score = critic.critic_score
+  const passed = score >= 7
+  const feedback = critic.critic_feedback
+  const failed = feedback === 'Critic failed to evaluate.'
 
   return (
-    <aside className="w-full md:w-56 shrink-0 md:sticky md:top-20">
+    <motion.div
+      initial={reduce ? false : { opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="rounded-2xl border border-line bg-surface shadow-soft px-4 py-3.5"
+    >
+      <div className="flex items-center justify-between mb-2.5 px-1">
+        <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-ink-3">
+          Critique
+        </p>
+        <Star size={12} weight="fill" className="text-accent" />
+      </div>
+
+      <div className="flex items-center gap-2.5 px-1">
+        <div className="flex items-baseline gap-0.5">
+          <span className="text-2xl font-semibold font-mono tabular-nums text-accent leading-none">
+            {score}
+          </span>
+          <span className="text-ink-3 text-xs">/10</span>
+        </div>
+        <span
+          className={`rounded-full px-2.5 py-1 text-[11px] font-medium ${
+            passed
+              ? 'border border-accent-ring bg-accent-soft text-accent'
+              : 'border border-line-2 bg-inset text-ink-2'
+          }`}
+        >
+          {passed ? 'Passed' : 'Below threshold'}
+        </span>
+      </div>
+
+      {feedback && !failed && (
+        <p className="mt-2.5 px-1 text-xs leading-relaxed text-ink-2 line-clamp-3">
+          {feedback}
+        </p>
+      )}
+    </motion.div>
+  )
+}
+
+export default function PipelineSidebar({ events, status, critic, saved }) {
+  const steps = buildStepList(events)
+  const isRunning = status === 'running'
+  const hasCritique = critic?.critic_score != null
+
+  return (
+    <aside className="w-full md:w-56 shrink-0 md:sticky md:top-20 md:max-h-[calc(100dvh-6rem)] md:overflow-y-auto md:pr-0.5 space-y-3">
+      {/* Pipeline stages */}
       <div className="rounded-2xl border border-line bg-surface shadow-soft px-4 py-4">
         <div className="flex items-center justify-between mb-3.5 px-1">
           <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-ink-3">
@@ -171,6 +223,17 @@ export default function PipelineSidebar({ events, status }) {
           />
         ))}
       </div>
+
+      {/* Critique result */}
+      {hasCritique && <CritiqueDock critic={critic} />}
+
+      {/* Saved confirmation - quiet line */}
+      {saved && (
+        <div className="flex items-center gap-2 px-1.5 text-xs text-ink-3">
+          <CheckCircle size={14} weight="fill" className="text-accent shrink-0" />
+          <span>Saved to memory for future reuse</span>
+        </div>
+      )}
     </aside>
   )
 }

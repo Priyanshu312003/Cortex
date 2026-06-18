@@ -1,7 +1,8 @@
 import NodeCard from './NodeCard.jsx'
 
-// writer events are omitted here - the full report appears in ReportPanel below
-const SKIP_NODES = new Set(['writer'])
+// writer -> full report appears in ReportPanel below.
+// critic / memory_write -> docked in the left sidebar, not the center feed.
+const SKIP_NODES = new Set(['writer', 'critic', 'memory_write'])
 
 export default function EventFeed({ events }) {
   const visible = events.filter(e => !SKIP_NODES.has(e.node))

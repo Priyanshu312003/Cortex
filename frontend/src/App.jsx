@@ -108,6 +108,7 @@ export default function App() {
   const criticEvents = events.filter(e => e.node === 'critic')
   const latestReport = writerEvents.at(-1)?.update?.output ?? null
   const latestCritic = criticEvents.at(-1)?.update ?? null
+  const saved = events.some(e => e.node === 'memory_write')
 
   const showPipeline = status !== 'idle'
   const doneCount = events.length
@@ -166,7 +167,12 @@ export default function App() {
         {/* Pipeline layout: sticky sidebar + content */}
         {showPipeline && (
           <div className="mt-7 flex flex-col md:flex-row gap-7 items-start">
-            <PipelineSidebar events={events} status={status} />
+            <PipelineSidebar
+              events={events}
+              status={status}
+              critic={latestCritic}
+              saved={saved}
+            />
 
             <div className="flex-1 min-w-0 space-y-2.5">
               <EventFeed events={events} />
