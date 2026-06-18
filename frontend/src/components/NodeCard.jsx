@@ -134,12 +134,12 @@ export default function NodeCard({ event }) {
 
   return (
     <motion.div
-      initial={reduce ? false : { opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-      className="rounded-2xl border border-line bg-surface shadow-soft px-5 py-4"
+      initial={reduce ? false : { opacity: 0, y: 12, scale: 0.99 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+      className="rounded-xl border border-line bg-surface/60 px-4 py-3"
     >
-      <div className="flex items-center gap-2 mb-3">
+      <div className="flex items-center gap-2 mb-2">
         {Icon && <Icon size={15} weight="regular" className="text-accent" />}
         <span className="text-[11px] font-mono uppercase tracking-[0.12em] text-ink-3">
           {meta?.title ?? node}

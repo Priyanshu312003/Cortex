@@ -51,7 +51,7 @@ function EmptyState({ onPick }) {
       <div className="grid place-items-center w-14 h-14 rounded-2xl bg-accent-soft border border-accent-ring">
         <Sparkle size={24} weight="fill" className="text-accent" />
       </div>
-      <h2 className="mt-5 text-lg font-semibold tracking-tight text-ink">
+      <h2 className="mt-5 font-display text-2xl font-semibold tracking-tight text-ink">
         Give Cortex a goal
       </h2>
       <p className="mt-2 max-w-md text-sm leading-relaxed text-ink-2">
@@ -115,17 +115,19 @@ export default function App() {
   return (
     <div className="min-h-[100dvh] font-sans">
       {/* Header */}
-      <header className="sticky top-0 z-10 border-b border-line bg-canvas/85 backdrop-blur-md px-6 py-4">
-        <div className="max-w-5xl mx-auto flex items-center gap-2.5">
-          <span className="grid place-items-center w-7 h-7 rounded-lg bg-accent">
-            <Brain size={17} weight="fill" className="text-white" />
+      <header className="sticky top-0 z-10 border-b border-line bg-canvas/80 backdrop-blur-md px-6 py-3.5">
+        <div className="max-w-[1100px] mx-auto flex items-center gap-2.5">
+          <span className="grid place-items-center w-8 h-8 rounded-xl bg-accent shadow-soft">
+            <Brain size={18} weight="fill" className="text-white" />
           </span>
-          <span className="font-semibold tracking-tight text-ink">Cortex</span>
-          <span className="text-ink-3 text-sm">multi-agent research</span>
+          <span className="font-display text-xl font-semibold text-ink leading-none">Cortex</span>
+          <span className="ml-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3">
+            multi-agent research
+          </span>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 py-8">
+      <main className="max-w-[1100px] mx-auto px-6 py-10">
         <GoalInput
           goal={goal}
           setGoal={setGoal}
@@ -161,19 +163,21 @@ export default function App() {
         {/* Empty state */}
         {status === 'idle' && <EmptyState onPick={setGoal} />}
 
-        {/* Pipeline layout: sidebar + content */}
+        {/* Pipeline layout: sticky sidebar + content */}
         {showPipeline && (
-          <div className="mt-8 flex flex-col md:flex-row gap-8 items-start">
+          <div className="mt-7 flex flex-col md:flex-row gap-7 items-start">
             <PipelineSidebar events={events} status={status} />
 
-            <div className="flex-1 min-w-0 space-y-4">
+            <div className="flex-1 min-w-0 space-y-2.5">
               <EventFeed events={events} />
               {latestReport && (
-                <ReportPanel
-                  markdown={latestReport}
-                  score={latestCritic?.critic_score}
-                  feedback={latestCritic?.critic_feedback}
-                />
+                <div className="pt-3">
+                  <ReportPanel
+                    markdown={latestReport}
+                    score={latestCritic?.critic_score}
+                    feedback={latestCritic?.critic_feedback}
+                  />
+                </div>
               )}
             </div>
           </div>

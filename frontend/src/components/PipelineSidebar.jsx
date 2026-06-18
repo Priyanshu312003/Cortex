@@ -1,3 +1,4 @@
+import { motion, useReducedMotion } from 'motion/react'
 import {
   Database,
   ListDashes,
@@ -57,6 +58,7 @@ function buildStepList(events) {
 }
 
 function StepRow({ step, isLast, isRunning }) {
+  const reduce = useReducedMotion()
   const { meta, isDone, isActive, event, retryStart } = step
   const Icon = meta?.Icon
   const live = isActive && isRunning
@@ -73,11 +75,23 @@ function StepRow({ step, isLast, isRunning }) {
         </div>
       )}
 
-      <div className="flex items-center gap-3 py-1">
+      <div
+        className={`flex items-center gap-3 rounded-lg -mx-2 px-2 py-1.5 transition-colors ${
+          live ? 'bg-accent-soft ring-1 ring-accent-ring' : ''
+        }`}
+      >
         {/* Status icon */}
         <div className="shrink-0">
           {isDone ? (
-            <CheckCircle size={20} weight="fill" className="text-accent" />
+            <motion.span
+              key="done"
+              initial={reduce ? false : { scale: 0.4, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 520, damping: 18 }}
+              className="block"
+            >
+              <CheckCircle size={20} weight="fill" className="text-accent" />
+            </motion.span>
           ) : live ? (
             <span className="grid place-items-center w-5 h-5 rounded-full pulse-ring">
               <CircleNotch
@@ -96,14 +110,14 @@ function StepRow({ step, isLast, isRunning }) {
           {Icon && (
             <Icon
               size={14}
-              weight="regular"
+              weight={live ? 'bold' : 'regular'}
               className={live ? 'text-accent' : isDone ? 'text-ink-2' : 'text-ink-3'}
             />
           )}
           <span
             className={`text-sm leading-snug ${
               live
-                ? 'text-ink font-medium'
+                ? 'text-accent font-semibold'
                 : isDone
                 ? 'text-ink-2'
                 : 'text-ink-3'
@@ -125,7 +139,7 @@ function StepRow({ step, isLast, isRunning }) {
         </div>
       </div>
 
-      {!isLast && <div className="ml-[9px] w-px h-3 bg-line" />}
+      {!isLast && <div className="ml-[9px] w-px h-2.5 bg-line" />}
     </>
   )
 }
@@ -135,11 +149,19 @@ export default function PipelineSidebar({ events, status }) {
   const isRunning = status === 'running'
 
   return (
-    <aside className="w-full md:w-56 shrink-0 md:sticky md:top-24">
-      <div className="rounded-2xl border border-line bg-surface shadow-soft px-5 py-5">
-        <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-ink-3 mb-4">
-          Pipeline
-        </p>
+    <aside className="w-full md:w-56 shrink-0 md:sticky md:top-20">
+      <div className="rounded-2xl border border-line bg-surface shadow-soft px-4 py-4">
+        <div className="flex items-center justify-between mb-3.5 px-1">
+          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-ink-3">
+            Pipeline
+          </p>
+          {isRunning && (
+            <span className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-accent">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent-bright pulse-ring" />
+              Live
+            </span>
+          )}
+        </div>
         {steps.map((step, idx) => (
           <StepRow
             key={`${step.node}-${step.passIndex}`}
