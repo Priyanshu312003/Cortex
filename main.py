@@ -5,8 +5,9 @@ from utils.scoring import get_average_score
 
 if __name__ == "__main__":
     graph = build_graph()
+    goal = input("Enter your goal: ").strip() or "plan a trip to Paris"
     initial_state = {
-        "goal": "plan a trip to Paris",
+        "goal": goal,
         "tasks": [],
         "research": "",
         "output": "",
