@@ -23,7 +23,7 @@ def researcher(state: State) -> dict:
         else:
             query = task
             
-        search_results = tavily.search(query=task, max_results=3)
+        search_results = tavily.search(query=query, max_results=3)
         text_results = [res["content"] for res in search_results["results"]]
         raw_text = "\n".join(text_results)
         
